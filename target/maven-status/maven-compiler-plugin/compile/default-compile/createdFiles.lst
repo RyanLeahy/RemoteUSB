@@ -1,0 +1,6 @@
+com\ryanleahy\remoteusbclient\Driver.class
+com\ryanleahy\remoteusbclient\FXMLController.class
+com\ryanleahy\remoteusbclient\Settings.class
+com\ryanleahy\remoteusbclient\SFTP.class
+com\ryanleahy\remoteusbclient\SSH.class
+com\ryanleahy\remoteusbclient\MainApp.class
