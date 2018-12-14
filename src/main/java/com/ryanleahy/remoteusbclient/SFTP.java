@@ -9,6 +9,8 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import java.io.File;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -33,24 +35,65 @@ public class SFTP
      */
     public Vector updateFiles()
     {
-        Vector<ChannelSftp.LsEntry> list = null;
+        Vector<ChannelSftp.LsEntry> workingList = null;
+        Vector<ChannelSftp.LsEntry> list = new Vector<ChannelSftp.LsEntry>();
+        
+        
         try
         {
-            mySFTPChannel.connect();
-            list = ((ChannelSftp)mySFTPChannel).ls("/mnt/usb/");
-            for(ChannelSftp.LsEntry entry : list)
-                System.out.println(entry.getFilename());
-            mySFTPChannel.disconnect();
+            mySFTPChannel.connect(); //open connection
+            workingList = ((ChannelSftp)mySFTPChannel).ls("/mnt/usb/"); //grab list of files currently in directory
+            mySFTPChannel.disconnect(); //close connection
         }
         catch(JSchException | SftpException e)
         {
             e.printStackTrace();
+            mySFTPChannel.disconnect(); //close just in case something goes wrong
             
             return null; //something went wrong
         }
+        
+        //now we need to remove the junk stuff that aren't files
+        for(ChannelSftp.LsEntry entry : workingList)
+            if(!(entry.getFilename().equals(".") || entry.getFilename().equals("..") || entry.getFilename().equals("System Volume Information") || entry.getFilename().equals("$RECYCLE.BIN")))
+                list.add(entry);
         
         return list;
     }
     
     
+    /**
+     * Function receives a list of files that want to be added to the remote server, takes in a list of files and puts them on the remote server.
+     * Boolean being returned notifies if everything went correctly
+     * 
+     * @param selectedFiles
+     * @return filesAdded
+     */
+    public boolean sendFiles(List<File> selectedFiles)
+    {
+        boolean filesAdded = false;
+        
+        try
+        {
+            mySFTPChannel.connect(); //open connection
+            ((ChannelSftp)mySFTPChannel).cd("/mnt/usb/"); //move to the storage directory of the pi
+            
+            for(File currentFile : selectedFiles) //iterate through selected file
+            {
+                ((ChannelSftp)mySFTPChannel).put(currentFile.getAbsolutePath(), currentFile.getName()); //copy the file from local target and paste it in the directory
+            }
+            
+        }
+        catch(JSchException | SftpException e)
+        {
+            e.printStackTrace(); //something went wrong, print stack trace
+            mySFTPChannel.disconnect(); //close connection
+            
+            return filesAdded;
+        }
+        
+        mySFTPChannel.disconnect(); //all went well time to close the connection
+        
+        return filesAdded;
+    }
 }

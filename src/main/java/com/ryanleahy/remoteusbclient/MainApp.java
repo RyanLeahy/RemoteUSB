@@ -14,12 +14,14 @@ public class MainApp extends Application
     @Override
     public void start(Stage stage) throws Exception 
     {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
-        
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/Scene.fxml"));
+        Parent root = (Parent)loader.load();
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         
-        stage.setTitle("JavaFX and Maven");
+        //Driver driver = FXMLLoader.getController()
+        stage.setTitle("RemoteUSB");
         stage.setScene(scene);
         stage.show();
     }
