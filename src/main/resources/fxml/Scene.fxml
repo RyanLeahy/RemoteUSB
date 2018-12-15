@@ -25,10 +25,11 @@
       <Group layoutX="30.0" layoutY="45.0">
          <children>
             <Button layoutY="90.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#chooseFiles" prefHeight="25.0" prefWidth="150.0" text="Choose Files" />
+            <Button layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#reboot" prefHeight="25.0" prefWidth="150.0" text="Reboot USB" />
          </children>
       </Group>
-      <Text fx:id="drivePath" layoutX="210.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No Backup Location Selected" />
+      <Text fx:id="drivePath" layoutX="210.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Files on USB" />
       <ListView fx:id="driveView" layoutX="210.0" layoutY="90.0" prefHeight="115.0" prefWidth="250.0" />
-      <Text fx:id="status" layoutX="14.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ready." />
+      <Text fx:id="status" layoutX="14.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connected" />
    </children>
 </AnchorPane>

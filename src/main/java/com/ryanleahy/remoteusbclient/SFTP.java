@@ -25,7 +25,6 @@ public class SFTP
     public SFTP(SSH ssh)
     {
         mySSH = ssh;
-        mySFTPChannel = mySSH.createChannel("sftp");
     }
     
     /**
@@ -37,13 +36,13 @@ public class SFTP
     {
         Vector<ChannelSftp.LsEntry> workingList = null;
         Vector<ChannelSftp.LsEntry> list = new Vector<ChannelSftp.LsEntry>();
+        mySFTPChannel = mySSH.createChannel("sftp");
         
         
         try
         {
             mySFTPChannel.connect(); //open connection
             workingList = ((ChannelSftp)mySFTPChannel).ls("/mnt/usb/"); //grab list of files currently in directory
-            mySFTPChannel.disconnect(); //close connection
         }
         catch(JSchException | SftpException e)
         {
@@ -57,6 +56,8 @@ public class SFTP
         for(ChannelSftp.LsEntry entry : workingList)
             if(!(entry.getFilename().equals(".") || entry.getFilename().equals("..") || entry.getFilename().equals("System Volume Information") || entry.getFilename().equals("$RECYCLE.BIN")))
                 list.add(entry);
+        
+        mySFTPChannel.disconnect(); //close connection
         
         return list;
     }
@@ -72,10 +73,11 @@ public class SFTP
     public boolean sendFiles(List<File> selectedFiles)
     {
         boolean filesAdded = false;
+        mySFTPChannel = mySSH.createChannel("sftp");
         
         try
         {
-            mySFTPChannel.connect(); //open connection
+            mySFTPChannel.connect(5000); //open connection
             ((ChannelSftp)mySFTPChannel).cd("/mnt/usb"); //move to the storage directory of the pi
             
             for(File currentFile : selectedFiles) //iterate through selected file
@@ -94,16 +96,19 @@ public class SFTP
         
         mySFTPChannel.disconnect(); //all went well time to close the connection
         
-        return !filesAdded; //change filesadded to true without changing variable
+        filesAdded = true;
+        
+        return filesAdded;
     }
     
     public boolean deleteFiles(List<File> selectedFiles)
     {
         boolean filesDeleted = false;
+        mySFTPChannel = mySSH.createChannel("sftp");
         
         try
         {
-            mySFTPChannel.connect(); //open connection
+            mySFTPChannel.connect(5000); //open connection
             ((ChannelSftp)mySFTPChannel).cd("/mnt/usb"); //move to the storage directory of the pi
             
             for(File currentFile : selectedFiles) //iterate through files selected for deletion
@@ -119,6 +124,10 @@ public class SFTP
             return filesDeleted;
         }
         
-        return !filesDeleted;         
+        mySFTPChannel.disconnect(); //all went well time to close the connection
+        
+        filesDeleted = true;
+        
+        return filesDeleted;         
     }
 }

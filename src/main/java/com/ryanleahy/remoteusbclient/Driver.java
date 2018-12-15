@@ -29,6 +29,11 @@ public class Driver
         mySFTP = new SFTP(mySSH);
     }
     
+    public static boolean connect()
+    {
+        return mySSH.connect();
+    }
+    
     public static boolean disconnect()
     {
         return mySSH.disconnect();
@@ -52,5 +57,18 @@ public class Driver
     public static boolean deleteFiles(List<File> selectFiles)
     {
         return mySFTP.deleteFiles(selectFiles);
+    }
+    
+    public static boolean isConnected()
+    {
+        return mySSH.isConnected();
+    }
+    
+    public static void reboot()
+    {
+        exec("sudo /reboot.sh");
+        disconnect(); //cleanly exit even if the remote server is already off
+        mySSH = new SSH(mySettings); //all previous channels are unusable after reboot so need to generate a clean slate
+        mySFTP = new SFTP(mySSH); //with a new SSH generated the old object in the previous SFTP will be useless
     }
 }

@@ -55,6 +55,7 @@ public class SSH
             mySession.setPassword(myPassword);
             java.util.Properties config = new java.util.Properties(); 
             config.put("StrictHostKeyChecking", "no");
+            config.put("PreferredAuthentications", "password");
             mySession.setConfig(config);
             mySession.connect();
             myChannel = createChannel("exec");
@@ -71,6 +72,11 @@ public class SSH
         mount(); //mount the partition before anymore work is done
         
         return connect;
+    }
+    
+    public boolean isConnected()
+    {
+        return mySession.isConnected();
     }
     
     /**

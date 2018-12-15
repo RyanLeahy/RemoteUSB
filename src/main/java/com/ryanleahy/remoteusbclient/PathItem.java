@@ -50,6 +50,7 @@ public class PathItem extends ListCell<String>
     
     /**
      *  Response to delete button being pressed.
+     * @param event
      */
     public void delete(ActionEvent event)
     {
@@ -57,7 +58,8 @@ public class PathItem extends ListCell<String>
         file.add(new File(getItem()));
         
         //Remove files from raspberry pi
-        Driver.deleteFiles(file);
+        if(file.isEmpty() != true)
+            Driver.deleteFiles(file);
         
         getListView().getItems().remove(getItem());
     }
@@ -71,7 +73,7 @@ public class PathItem extends ListCell<String>
         super.updateItem(item, empty);
         setText(null);
         setGraphic(null);
-
+        
         if (item != null && !empty)
         {
             label.setText(item);

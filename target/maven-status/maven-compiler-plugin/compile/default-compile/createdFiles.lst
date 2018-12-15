@@ -1,6 +1,8 @@
+com\ryanleahy\remoteusbclient\CountDown.class
 com\ryanleahy\remoteusbclient\Driver.class
 com\ryanleahy\remoteusbclient\PathItem.class
 com\ryanleahy\remoteusbclient\Settings.class
+com\ryanleahy\remoteusbclient\CountDownInterrupted.class
 com\ryanleahy\remoteusbclient\SFTP.class
 com\ryanleahy\remoteusbclient\SSH.class
 com\ryanleahy\remoteusbclient\UI.class
