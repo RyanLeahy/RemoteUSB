@@ -23,8 +23,8 @@ public class Settings
     public Settings()
     {
         myAddress = "192.168.1.131"; //TODO
-        myUsername = "pi";
-        myPassword = "roblox2401";
+        myUsername = "root";
+        myPassword = "hackme123";
         myPort = 22;
     }
     

@@ -48,4 +48,9 @@ public class Driver
     {
         return mySFTP.sendFiles(selectFiles);
     }
+    
+    public static boolean deleteFiles(List<File> selectFiles)
+    {
+        return mySFTP.deleteFiles(selectFiles);
+    }
 }
