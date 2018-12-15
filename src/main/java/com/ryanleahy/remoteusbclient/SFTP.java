@@ -76,11 +76,13 @@ public class SFTP
         try
         {
             mySFTPChannel.connect(); //open connection
-            ((ChannelSftp)mySFTPChannel).cd("/mnt/usb/"); //move to the storage directory of the pi
+            ((ChannelSftp)mySFTPChannel).cd("/home/pi/Downloads"); //move to the storage directory of the pi
             
             for(File currentFile : selectedFiles) //iterate through selected file
             {
                 ((ChannelSftp)mySFTPChannel).put(currentFile.getAbsolutePath(), currentFile.getName()); //copy the file from local target and paste it in the directory
+                Driver.exec("sudo cp /home/pi/Downloads/" + currentFile.getName() + " /mnt/usb/"); //had a permission problem so i put the file somewhere I could then copy it
+                Driver.exec("sudo rm -f /home/pi/Downloads/" + currentFile.getName()); //delete the copied file
             }
             
         }
@@ -94,6 +96,6 @@ public class SFTP
         
         mySFTPChannel.disconnect(); //all went well time to close the connection
         
-        return filesAdded;
+        return !filesAdded; //change filesadded to true without changing variable
     }
 }

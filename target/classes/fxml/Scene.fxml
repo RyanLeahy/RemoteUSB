@@ -2,13 +2,33 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="500" prefWidth="500" xmlns:fx="http://javafx.com/fxml" fx:controller="com.ryanleahy.remoteusbclient.Driver">
-    <children>
-        <Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
-    </children>
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="235.0" prefWidth="490.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ryanleahy.remoteusbclient.UI">
+     <children>
+      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Group layoutX="30.0" layoutY="45.0">
+         <children>
+            <Button layoutY="90.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#chooseFiles" prefHeight="25.0" prefWidth="150.0" text="Choose Files" />
+         </children>
+      </Group>
+      <Text fx:id="drivePath" layoutX="210.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No Backup Location Selected" />
+      <ListView fx:id="driveView" layoutX="210.0" layoutY="90.0" prefHeight="115.0" prefWidth="250.0" />
+      <Text fx:id="status" layoutX="14.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ready." />
+   </children>
 </AnchorPane>
