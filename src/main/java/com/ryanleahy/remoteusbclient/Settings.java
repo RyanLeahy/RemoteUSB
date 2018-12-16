@@ -44,15 +44,14 @@ public class Settings
         try
         {
             myAddress = settingsFileReader.readLine().substring(3);
-            myUsername = settingsFileReader.readLine().substring(8);
-            myPassword = settingsFileReader.readLine().substring(8);
+            myUsername = settingsFileReader.readLine().substring(9);
+            myPassword = settingsFileReader.readLine().substring(9);
             myPort = Integer.parseInt(settingsFileReader.readLine().substring(5));
         }
         catch (IOException ex)
         {
             Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
     
     public String getAddress()
