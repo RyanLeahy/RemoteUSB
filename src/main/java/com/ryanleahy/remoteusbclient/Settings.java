@@ -5,12 +5,13 @@
  */
 package com.ryanleahy.remoteusbclient;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,33 +26,39 @@ public class Settings
     private String myUsername;
     private String myPassword;
     private int myPort;
-    private BufferedReader settingsFileReader;
+    private Scanner settingsFileReader;
+    private static List<String> ignoredFiles;
     
     /**
      * Constructor reads file and stores them in instance variables
      */
     public Settings()
     {
+        String filePath;
+        ignoredFiles = new LinkedList<String>();
+
         try
         {
-            settingsFileReader = new BufferedReader(new FileReader(new File(Settings.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().toString() + "/settings.txt"));
+            settingsFileReader = new Scanner(new FileReader(new File(Settings.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().toString() + "/settings.txt"));
         }
-        catch (FileNotFoundException | URISyntaxException ex)
+        catch (URISyntaxException | FileNotFoundException ex)
         {
             Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        try
+        myAddress = settingsFileReader.nextLine().substring(3);
+        myUsername = settingsFileReader.nextLine().substring(9);
+        myPassword = settingsFileReader.nextLine().substring(9);
+        myPort = Integer.parseInt(settingsFileReader.nextLine().substring(5));
+        settingsFileReader.nextLine(); //skip text saying files to skip
+        while(settingsFileReader.hasNextLine())
         {
-            myAddress = settingsFileReader.readLine().substring(3);
-            myUsername = settingsFileReader.readLine().substring(9);
-            myPassword = settingsFileReader.readLine().substring(9);
-            myPort = Integer.parseInt(settingsFileReader.readLine().substring(5));
+            filePath = settingsFileReader.nextLine(); //read file paths, will exit once it throws an IOException
+            ignoredFiles.add(filePath);
         }
-        catch (IOException ex)
-        {
-            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            
+        settingsFileReader.close();
+        
     }
     
     public String getAddress()
@@ -73,4 +80,10 @@ public class Settings
     {
         return myPort;
     }
+    
+    public static List<String> getIgnoredFiles()
+    {
+        return ignoredFiles;
+    }
+            
 }

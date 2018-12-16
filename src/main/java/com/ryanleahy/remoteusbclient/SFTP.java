@@ -54,8 +54,12 @@ public class SFTP
         
         //now we need to remove the junk stuff that aren't files
         for(ChannelSftp.LsEntry entry : workingList)
-            if(!(entry.getFilename().equals(".") || entry.getFilename().equals("..") || entry.getFilename().equals("System Volume Information") || entry.getFilename().equals("$RECYCLE.BIN")))
+        {
+            if(!(Settings.getIgnoredFiles().contains(entry.getFilename())))
+            {
                 list.add(entry);
+            }
+        }
         
         mySFTPChannel.disconnect(); //close connection
         
