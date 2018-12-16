@@ -39,7 +39,6 @@ public class CountDown extends Thread
     {
         for(int i = 50; i > 0; i--) //countdown from 50 to 1
         {
-            System.out.println(UI.getRebootPresses() + i);
             if(UI.getRebootPresses() == 1)
                 myUI.setStatus("Rebooting: Attempting connection in " + i + " Seconds");
             try
@@ -60,6 +59,17 @@ public class CountDown extends Thread
             myUI.setStatus("Connection not established, restart program"); //otherwise update it to tell user to restart program
         
         UI.setRebootPresses(UI.getRebootPresses() - 1); //change the amount of reboot presses back now that the event has been handled
+        
+        try
+        {
+            Thread.sleep(3000); //sleep because for some reason fileScan doesn't immediately work after a reboot
+        }
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(CountDown.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        myUI.fileScan();
         
     }
     

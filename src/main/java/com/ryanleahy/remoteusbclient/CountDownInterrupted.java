@@ -13,24 +13,49 @@ import java.util.logging.Logger;
  * 
  * @author rplea
  */
-public class CountDownInterrupted implements Runnable 
+public class CountDownInterrupted extends Thread
 {
 
+    private String myThreadName;
+    private UI myUI;
+    private Thread t;
+    
+    public CountDownInterrupted(String threadName, UI ui)
+    {
+        myThreadName = threadName;
+        myUI = ui;
+    }
+    
+    @Override
+    public void start()
+    {
+        if(t == null)
+        {
+            t = new Thread(this, myThreadName);
+            t.start();
+        }
+    }
+    
     @Override
     public void run()
     {
-        //UI.setStatus("Already Rebooting"); //update UI to tell user they've already pressed the reboot button
+        myUI.setStatus("Already Rebooting"); //set ui message to let user know they already clicked the reset button
         
+        /*
+            This sleep has a specific purpose, in the event handler for the reboot button there is another thread counting down and updating the ui message every second
+            but that message only updates if the amount of reboot button presses is equal to 1 so if this thread is created it's assumed that it equals more than one
+            so by sleeping this thread for 2 seconds it allows it to display that message for two seconds because it can't put the amount of button presses back to normal.
+        */
         try
         {
             Thread.sleep(2000);
         }
         catch (InterruptedException ex)
         {
-            Logger.getLogger(CountDownInterrupted.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CountDownInterrupted.class.getName()).log(Level.SEVERE, null, ex); //still have no idea what this does, IDE generated it
         }
         
-        UI.setRebootPresses(UI.getRebootPresses() - 1); //set number of presses back to normal to tell the UI the event has been handled.
+        UI.setRebootPresses(UI.getRebootPresses() - 1);
     }
     
 }

@@ -5,6 +5,15 @@
  */
 package com.ryanleahy.remoteusbclient;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Class reads a file and makes the settings accessible to the rest of the program
  * 
@@ -16,16 +25,34 @@ public class Settings
     private String myUsername;
     private String myPassword;
     private int myPort;
+    private BufferedReader settingsFileReader;
     
     /**
      * Constructor reads file and stores them in instance variables
      */
     public Settings()
     {
-        myAddress = "192.168.1.131"; //TODO
-        myUsername = "root";
-        myPassword = "hackme123";
-        myPort = 22;
+        try
+        {
+            settingsFileReader = new BufferedReader(new FileReader(new File(Settings.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().toString() + "/settings.txt"));
+        }
+        catch (FileNotFoundException | URISyntaxException ex)
+        {
+            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try
+        {
+            myAddress = settingsFileReader.readLine().substring(3);
+            myUsername = settingsFileReader.readLine().substring(8);
+            myPassword = settingsFileReader.readLine().substring(8);
+            myPort = Integer.parseInt(settingsFileReader.readLine().substring(5));
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
     public String getAddress()

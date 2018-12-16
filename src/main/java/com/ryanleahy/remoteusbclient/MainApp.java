@@ -66,11 +66,19 @@ public class MainApp extends Application
         stage.show();
     }
     
+    //overrides original stop function so when you press the red x it disconnects and unmounts beforehand
+    @Override
+    public void stop()
+    {
+        Driver.disconnect();
+    }
+    
     private void initStage() throws IOException
     {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
         
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/styles/Styles.css").toExternalForm());
         myStage.setScene(scene);
         myStage.setResizable(false);
     }
