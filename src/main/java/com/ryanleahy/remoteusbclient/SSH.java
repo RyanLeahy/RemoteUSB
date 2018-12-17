@@ -57,7 +57,7 @@ public class SSH
             config.put("StrictHostKeyChecking", "no");
             config.put("PreferredAuthentications", "password");
             mySession.setConfig(config);
-            mySession.connect();
+            mySession.connect(5000);
             myChannel = createChannel("exec");
             
         }

@@ -46,7 +46,10 @@ public class Driver
     
     public static Vector updateFiles()
     {
-        return mySFTP.updateFiles();
+        if(isConnected())
+            return mySFTP.updateFiles();
+        else 
+            return null;
     }
     
     public static boolean sendFiles(List<File> selectFiles)

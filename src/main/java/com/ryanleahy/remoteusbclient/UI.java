@@ -112,14 +112,22 @@ public class UI
         //update UI incase it's not displaying all the files for some reason
         list = Driver.updateFiles(); //get all the files on the drive already
         
-        for(ChannelSftp.LsEntry entry : list) //traverse through it and put the file names in a linked list
+        if(list != null)
         {
-            if(!driveView.getItems().contains(entry.getFilename())) //add it as long as the UI already doesn't show it
-                fileNames.add(entry.getFilename());
-        }
-        driveView.getItems().addAll(fileNames); //give linkedlist to this thing
+            for(ChannelSftp.LsEntry entry : list) //traverse through it and put the file names in a linked list
+            {
+                if(!driveView.getItems().contains(entry.getFilename())) //add it as long as the UI already doesn't show it
+                    fileNames.add(entry.getFilename());
+            }
+            driveView.getItems().addAll(fileNames); //give linkedlist to this thing
         
-        driveView.setCellFactory(param -> new PathItem()); //honestly no idea I just copied this from the USBBackup so ask Kevin cruse
+            driveView.setCellFactory(param -> new PathItem()); //honestly no idea I just copied this from the USBBackup so ask Kevin cruse
+        }
+        else
+        {
+            setStatus("Couldn't establish connection, is the USB plugged in?");
+            unscanFiles();
+        }
     }
     
     public void unscanFiles()
