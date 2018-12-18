@@ -1,0 +1,11 @@
+IP=
+USERNAME=root
+PASSWORD=
+PORT=22
+FILES TO IGNORE(to add more just press enter at the end of the last one and type the file name)
+.
+..
+.Spotlight-V100
+.fseventsd
+System Volume Information
+$RECYCLE.BIN

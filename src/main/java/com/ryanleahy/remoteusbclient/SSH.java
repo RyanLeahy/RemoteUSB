@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ryanleahy.remoteusbclient;
 
 import com.jcraft.jsch.Channel;
@@ -15,7 +10,7 @@ import com.jcraft.jsch.Session;
 /**
  * Class handles the SSH portion such as executing commands and establishing a connection and establishing credentials with the host
  * 
- * @author rplea
+ * @author Ryan Leahy
  */
 public class SSH 
 {
@@ -41,7 +36,7 @@ public class SSH
     }
     
     /**
-     * Function reads settings data taken from config file and attempts to establish a connection with raspberry pi.
+     * Method reads settings data taken from config file and attempts to establish a connection with raspberry pi and returns a true boolean if it was able to establish a connection
      * 
      * @return connect
      */
@@ -51,14 +46,14 @@ public class SSH
         
         try
         {
-            mySession = myClient.getSession(myUsername, myAddress, myPort);
-            mySession.setPassword(myPassword);
-            java.util.Properties config = new java.util.Properties(); 
-            config.put("StrictHostKeyChecking", "no");
-            config.put("PreferredAuthentications", "password");
+            mySession = myClient.getSession(myUsername, myAddress, myPort); //initiate session
+            mySession.setPassword(myPassword); //pass the password
+            java.util.Properties config = new java.util.Properties(); //check certain settings for connection parameters such as 
+            config.put("StrictHostKeyChecking", "no"); //strictly checking the keys match, this reduces security but the scope of the project is not so concerned about the security
+            config.put("PreferredAuthentications", "password"); //letting it know you want it to authenticate with a password
             mySession.setConfig(config);
-            mySession.connect(5000);
-            myChannel = createChannel("exec");
+            mySession.connect(5000); //try to connect and stop after 5 seconds
+            myChannel = createChannel("exec"); //create a channel used for executing commands
             
         }
         catch(JSchException e)
@@ -80,17 +75,17 @@ public class SSH
     }
     
     /**
-     * Function runs command passed in a string
+     * Method runs command passed in a string
      * 
-     * @param command 
+     * @param command is a string holding a terminal command
      */
     public void exec(String command)
     {
         try
         {
-            ((ChannelExec)myChannel).setCommand(command);
-            myChannel.connect();
-            myChannel.disconnect();
+            ((ChannelExec)myChannel).setCommand(command); 
+            myChannel.connect(); //connecting runs the command
+            myChannel.disconnect(); //close connection because the command was run
         }
         catch(Exception e)
         {
@@ -98,13 +93,12 @@ public class SSH
         }   
     }
     
-    
     /*
         Function manages mounting the correct partitions
     */
     private void mount()
     {
-        exec("sudo mount -v -o offset=1048576 -t vfat /piusb.iso /mnt/usb");
+        exec("sudo mount -v -o offset=1048576 -t vfat /piusb.iso /mnt/usb"); //the offset is very specific for my USB, if anyone actually cares about this project and complains i'll fix it
     }
     
     /*
@@ -115,6 +109,12 @@ public class SSH
         exec("sudo umount /piusb.iso");
     }
     
+    /**
+     * Function creates a Channel that follows the spec given in the String such as "exec" and passes back the channel
+     * 
+     * @param typeOf is a String holding what kind of channel it is
+     * @return newChannel
+     */
     public Channel createChannel(String typeOf)
     {
         try
@@ -138,7 +138,7 @@ public class SSH
     {
         boolean disconnect = true;
         
-        unmount();
+        unmount(); //super important to make sure you don't corrupt the USB portion
         
         try
         {

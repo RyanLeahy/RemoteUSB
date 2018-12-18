@@ -30,14 +30,20 @@ public class MainApp extends Application
     }
     
     /**
+     * Sets the UI being used by the program
      * 
-     * @param ui 
+     * @param ui the UI object
      */
     public static void setUI(UI ui)
     {
         myUI = ui;
     }
     
+    /**
+     * Initial entrance point of the program, sets up UI and the Driver which acts as the intermediary between the classes
+     * @param stage the Stage object
+     * @throws Exception 
+     */
     @Override
     public void start(Stage stage) throws Exception 
     {
@@ -54,31 +60,29 @@ public class MainApp extends Application
             
             exit(1);
         }
-        /*FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/Scene.fxml"));
-        Parent root = (Parent)loader.load();
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("/styles/Styles.css");
         
-        //Driver driver = FXMLLoader.getController()
-        stage.setTitle("RemoteUSB");
-        stage.setScene(scene);*/
         stage.show();
     }
     
-    //overrides original stop function so when you press the red x it disconnects and unmounts beforehand
+    /**
+     * overrides original stop function so when you press the red x it disconnects and unmounts beforehand
+     */
     @Override
     public void stop()
     {
         Driver.disconnect();
     }
     
+    /*
+      Creates the UI object and loads all beginning UI stuff
+    */
     private void initStage() throws IOException
     {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/styles/Styles.css").toExternalForm());
+        myStage.setTitle("Remote USB");
         myStage.setScene(scene);
         myStage.setResizable(false);
     }

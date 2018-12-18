@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ryanleahy.remoteusbclient;
 
 import com.jcraft.jsch.ChannelSftp;
@@ -10,7 +5,6 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -21,31 +15,33 @@ import javafx.stage.FileChooser;
 /**
  * Class controls UI actions and anything UI related
  * 
- * @author rplea
+ * @author Ryan Leahy
  */
 public class UI
 {
-    @FXML private AnchorPane pane;
-    @FXML private ListView<String> driveView;
-    @FXML private Text status;
-    private static int rebootPresses;
+    @FXML private AnchorPane pane; //whole window
+    @FXML private ListView<String> driveView; //just the files displayer
+    @FXML private Text status; //holds the status in the bottom left
+    private static int rebootPresses; //how many times the reboot button was pressed
     
     /**
-     * 
+     * Method handles initializing the UI
      */
     @FXML
     public void initialize()
     {
         rebootPresses = 0;
         
-        fileScan();
+        fileScan(); //scan system, if not connected it will act accordingly
         
-        MainApp.setUI(this);
+        MainApp.setUI(this); //tell Main this UI is what we're using
     }
     
     /**
-     *  Choose files button listener.
-     *  Choose specific files to backup.
+     * Choose files button listener.
+     * Choose specific files to upload.
+     * 
+     * @param event is an ActionEvent
      */
     @FXML
     public void chooseFiles(ActionEvent event)
@@ -55,17 +51,18 @@ public class UI
         List<String> paths;
 
         chooser.setTitle("File Selection");
-        files = chooser.showOpenMultipleDialog(pane.getScene().getWindow());
-        if(files != null)
-            Driver.sendFiles(files);
+        files = chooser.showOpenMultipleDialog(pane.getScene().getWindow()); //creates window chooser with native OS file explorer
+        if(files != null) //if something was selected
+            Driver.sendFiles(files); //upload them
         
-        fileScan();
+        fileScan(); //rescan the file system with the new files on it and update the drive viewer
 
     }
     
     /**
      * Function handles the rebooting and updating UI
-     * @param event 
+     * 
+     * @param event is an ActionEvent
      */
     @FXML
     public void reboot(ActionEvent event)
@@ -75,35 +72,59 @@ public class UI
         if(rebootPresses == 1) //in case the user presses the button multiple times the program only reboots once
         {
             Driver.reboot();
-            unscanFiles();
-            new CountDown("Reboot-Count-Down", this).start();
+            unscanFiles(); //clean out driver viewer
+            new CountDown("Reboot-Count-Down", this).start(); //start the countdown thread
         }
         else if(rebootPresses > 1)
         {
-            new CountDownInterrupted("Reboot-Count-Down-Interrupted", this).start();
+            new CountDownInterrupted("Reboot-Count-Down-Interrupted", this).start(); //if the user presses it more than once this thread tells them it's already restarting and prevents anything harmful from happening
         }
     }
     
+    /**
+     * Method returns the amount of times the reboot button has been pressed
+     * 
+     * @return rebootPresses
+     */
     public static int getRebootPresses()
     {
         return rebootPresses;
     }
     
+    /**
+     * Method sets the amount of times the reboot button has been pressed, this is best for when an reboot button press has been handled.
+     * If it's been handled than the amount of unhandled button presses should go down by one
+     * 
+     * @param amountPressed sets the local instance variable
+     */
     public static void setRebootPresses(int amountPressed)
     {
         rebootPresses = amountPressed;
     }
     
+    /**
+     * Sets the status message of the UI in the bottom left corner.
+     * 
+     * @param s sets that status
+     */
     public void setStatus(String s)
     {
         status.setText(s);
     }
     
+    /**
+     * Method handles the rescan files button press event
+     * 
+     * @param event is an ActionEvent
+     */
     public void rescanFiles(ActionEvent event)
     {
        fileScan();
     }
     
+    /**
+     * Method scans the files on the USB and updates the UI with new entries
+     */
     public void fileScan()
     {
         LinkedList<String> fileNames = new LinkedList<>();
@@ -112,7 +133,7 @@ public class UI
         //update UI incase it's not displaying all the files for some reason
         list = Driver.updateFiles(); //get all the files on the drive already
         
-        if(list != null)
+        if(list != null) //if it is null than something is wrong with the connection
         {
             for(ChannelSftp.LsEntry entry : list) //traverse through it and put the file names in a linked list
             {
@@ -123,16 +144,19 @@ public class UI
         
             driveView.setCellFactory(param -> new PathItem()); //honestly no idea I just copied this from the USBBackup so ask Kevin cruse
         }
-        else
+        else if (!Driver.isConnected())
         {
-            setStatus("Couldn't establish connection, is the USB plugged in?");
+            setStatus("Couldn't connect, is the USB plugged in?");
             unscanFiles();
         }
-    }
+    }     
     
+    /**
+     * Method gets rid of all files displayed in the drive view window without taking any action on them
+     */
     public void unscanFiles()
     {
-        driveView.getItems().remove(0, driveView.getItems().size()); //when the usb is disconnected it doesn't make sense to display the files
-        driveView.setCellFactory(param -> new PathItem());
+        driveView.getItems().remove(0, driveView.getItems().size()); //when the usb is disconnected it doesn't make sense to display the files so create an empty list
+        driveView.setCellFactory(param -> new PathItem()); //and update the window with it
     }
 }

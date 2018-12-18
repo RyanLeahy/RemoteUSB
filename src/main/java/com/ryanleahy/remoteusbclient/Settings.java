@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ryanleahy.remoteusbclient;
 
 import java.io.File;
@@ -18,7 +13,7 @@ import java.util.logging.Logger;
 /**
  * Class reads a file and makes the settings accessible to the rest of the program
  * 
- * @author rplea
+ * @author Ryan Leahy
  */
 public class Settings
 {
@@ -61,26 +56,51 @@ public class Settings
         
     }
     
+    /**
+     * Method returns IP address of USB device
+     * 
+     * @return myAddress
+     */
     public String getAddress()
     {
         return myAddress;
     }
     
+    /**
+     * Method returns Username used to login to the USB device
+     * 
+     * @return myUsername
+     */
     public String getUsername()
     {
         return myUsername;
     }
     
+    /**
+     * Method returns Password used to login to the USB device
+     * 
+     * @return myPassword
+     */
     public String getPassword()
     {
         return myPassword;
     }
     
+    /**
+     * Method returns Port used to connect to the USB device
+     * 
+     * @return myPort
+     */
     public int getPort()
     {
         return myPort;
     }
     
+    /**
+     * Method returns list of file paths of files to ignore in the UI
+     * 
+     * @return ignoredFiles
+     */
     public static List<String> getIgnoredFiles()
     {
         return ignoredFiles;

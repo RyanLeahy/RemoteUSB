@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ryanleahy.remoteusbclient;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author rplea
+ * CountDown handles the counting down and reestablishing a connection with the USB device
+ * 
+ * @author Ryan Leahy
  */
 public class CountDown extends Thread
 {
@@ -18,12 +14,21 @@ public class CountDown extends Thread
     private UI myUI;
     private Thread t;
     
+    /**
+     * Constructor creates and starts the count down thread
+     * 
+     * @param threadName is a String holding the Thread name
+     * @param ui is the UI used by the application
+     */
     public CountDown(String threadName, UI ui)
     {
         myThreadName = threadName;
         myUI = ui;
     }
     
+    /**
+     * Starts the thread
+     */
     @Override
     public void start()
     {
@@ -34,6 +39,9 @@ public class CountDown extends Thread
         }
     }
     
+    /**
+     * Runs the threads code
+     */
     @Override
     public void run()
     {

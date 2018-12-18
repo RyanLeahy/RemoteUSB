@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ryanleahy.remoteusbclient;
 
 import com.jcraft.jsch.Channel;
@@ -14,14 +9,20 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * Class handles all file transfer interactions and file explorer functionality
- * @author rplea
+ * Class handles all file transfer interactions and file lists
+ * 
+ * @author Ryan Leahy
  */
 public class SFTP
 {
     private SSH mySSH;
-    private Channel mySFTPChannel;
+    private Channel mySFTPChannel; //you may be wondering why I reinstanciate the same object so many times, well for some reason that fixed a bug I was having so yeah
     
+    /**
+     * Constructor of SFTP class asks for the SSH to create the SFTP link, if the SSH is not working the SFTP will not work either
+     * 
+     * @param ssh is an SSH object
+     */
     public SFTP(SSH ssh)
     {
         mySSH = ssh;
@@ -34,9 +35,9 @@ public class SFTP
      */
     public Vector updateFiles()
     {
-        Vector<ChannelSftp.LsEntry> workingList = null;
-        Vector<ChannelSftp.LsEntry> list = new Vector<ChannelSftp.LsEntry>();
-        mySFTPChannel = mySSH.createChannel("sftp");
+        Vector<ChannelSftp.LsEntry> workingList = null; //list used to store all files that come in
+        Vector<ChannelSftp.LsEntry> list = new Vector<ChannelSftp.LsEntry>(); //list that stores only the files desired
+        mySFTPChannel = mySSH.createChannel("sftp"); //create the SFTP channel to download the names of the files in the directory
         
         
         try
@@ -55,9 +56,9 @@ public class SFTP
         //now we need to remove the junk stuff that aren't files
         for(ChannelSftp.LsEntry entry : workingList)
         {
-            if(!(Settings.getIgnoredFiles().contains(entry.getFilename())))
+            if(!(Settings.getIgnoredFiles().contains(entry.getFilename()))) //check file names against the files to be ignored list from the settings file
             {
-                list.add(entry);
+                list.add(entry); //if the file is not in the ignore list it gets added
             }
         }
         
@@ -71,17 +72,17 @@ public class SFTP
      * Function receives a list of files that want to be added to the remote server, takes in a list of files and puts them on the remote server.
      * Boolean being returned notifies if everything went correctly
      * 
-     * @param selectedFiles
+     * @param selectedFiles is a List holding File objects
      * @return filesAdded
      */
     public boolean sendFiles(List<File> selectedFiles)
     {
         boolean filesAdded = false;
-        mySFTPChannel = mySSH.createChannel("sftp");
+        mySFTPChannel = mySSH.createChannel("sftp"); //create channel for sending the files to the USB
         
         try
         {
-            mySFTPChannel.connect(5000); //open connection
+            mySFTPChannel.connect(5000); //open connection and if it doesn't establish in 5000 seconds then throw an exception
             ((ChannelSftp)mySFTPChannel).cd("/mnt/usb"); //move to the storage directory of the pi
             
             for(File currentFile : selectedFiles) //iterate through selected file
@@ -108,7 +109,7 @@ public class SFTP
     public boolean deleteFiles(List<File> selectedFiles)
     {
         boolean filesDeleted = false;
-        mySFTPChannel = mySSH.createChannel("sftp");
+        mySFTPChannel = mySSH.createChannel("sftp"); //create channel to be able to delete files
         
         try
         {

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ryanleahy.remoteusbclient;
 
 import java.util.logging.Level;
@@ -11,7 +6,7 @@ import java.util.logging.Logger;
 /**
  * Thread to handle telling the user that they already pressed the reboot button
  * 
- * @author rplea
+ * @author Ryan Leahy
  */
 public class CountDownInterrupted extends Thread
 {
@@ -20,12 +15,21 @@ public class CountDownInterrupted extends Thread
     private UI myUI;
     private Thread t;
     
+    /**
+     * Constructor constructs a thread and starts it
+     * 
+     * @param threadName is the String holding the name of the thread
+     * @param ui is the UI used by the application
+     */
     public CountDownInterrupted(String threadName, UI ui)
     {
         myThreadName = threadName;
         myUI = ui;
     }
     
+    /**
+     * Method starts the thread
+     */
     @Override
     public void start()
     {
@@ -36,6 +40,9 @@ public class CountDownInterrupted extends Thread
         }
     }
     
+    /**
+     * Method runs the threads code
+     */
     @Override
     public void run()
     {
